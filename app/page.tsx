@@ -695,10 +695,10 @@ export default function HomePage() {
         </div>
 
         <div className="space-y-6">
-          <Panel title="Output" description="Structured results stay visible while you move through the tabs.">
+          <Panel title="Information Summarizer" description="Structured results stay visible while you move through the tabs.">
             {!extracted && !ideas && !judgeResult ? (
               <div className="rounded-2xl border border-dashed border-white/10 px-4 py-12 text-center text-sm text-slate-400">
-                Run an extraction, idea generation, or judging action to see results here.
+                Run an extraction, idea generation, or judging action to see summarized results here.
               </div>
             ) : null}
 
@@ -711,8 +711,8 @@ export default function HomePage() {
                       <p className="mt-1 text-sm text-slate-400">Theme, requirements, and judging criteria from the slide content.</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      <GhostButton onClick={() => copyText("extract", JSON.stringify(extracted, null, 2))}>
-                        {copied === "extract" ? "Copied" : "Copy JSON"}
+                      <GhostButton onClick={() => copyText("extract", `## Extracted Brief\n\n**Theme:** ${extracted.theme}\n\n### Requirements\n\n${extracted.requirements.map((r) => `- ${r}`).join("\n")}\n\n### Judging Criteria\n\n${extracted.criteria.map((c) => `- ${c}`).join("\n")}\n\n### Summary\n\n${extracted.summary}`)}>
+                        {copied === "extract" ? "Copied" : "Copy"}
                       </GhostButton>
                       <GhostButton
                         onClick={() =>
@@ -806,8 +806,8 @@ export default function HomePage() {
                       <p className="mt-1 text-sm text-slate-400">Scores out of 10 plus targeted improvements.</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      <GhostButton onClick={() => copyText("judge", JSON.stringify(judgeResult, null, 2))}>
-                        {copied === "judge" ? "Copied" : "Copy JSON"}
+                      <GhostButton onClick={() => copyText("judge", `## Judge Verdict\n\n| Criteria | Score |\n|---|---|\n| Innovation | ${judgeResult.scores.innovation}/10 |\n| Feasibility | ${judgeResult.scores.feasibility}/10 |\n| Impact | ${judgeResult.scores.impact}/10 |\n\n### Justification\n\n${judgeResult.justification}\n\n### Improvements\n\n${judgeResult.improvements.map((i) => `- ${i}`).join("\n")}\n\n### Improved Idea\n\n${judgeResult.improvedIdea}`)}>
+                        {copied === "judge" ? "Copied" : "Copy"}
                       </GhostButton>
                       <GhostButton
                         onClick={() =>

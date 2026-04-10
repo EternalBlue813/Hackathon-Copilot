@@ -1,8 +1,8 @@
 # Hackathon Copilot
 
-> **Your AI-powered co-pilot for winning hackathons — from slide to pitch in minutes.**
+> **Your AI-powered co-pilot for winning hackathons — from slide to pitch-ready code in minutes.**
 
-Hackathon Copilot is a lightweight web app that turns raw hackathon briefs into structured requirements, generates strong MVP ideas, and stress-tests them with an AI judge — all in one seamless flow. It's built for speed, clarity, and demo-readiness.
+Hackathon Copilot is a lightweight web app that turns raw hackathon briefs into structured requirements, generates strong MVP ideas, stress-tests them with an AI judge, and produces a ready-to-paste vibe-coding prompt — all in one seamless flow. Built for speed, clarity, and demo-readiness.
 
 ---
 
@@ -12,7 +12,7 @@ Every hackathon starts the same way: teams scramble to read dense slide decks, a
 
 ## Our Solution
 
-Hackathon Copilot compresses that entire front-end process into a guided three-step pipeline powered by frontier LLMs:
+Hackathon Copilot compresses that entire process into a guided four-step pipeline powered by frontier LLMs:
 
 ### 1. Extract — Slide to Structure
 
@@ -21,6 +21,8 @@ Upload hackathon slide images or paste brief text. Gemini 3.1 Pro reads the imag
 - **Theme** — what the hackathon is about
 - **Requirements** — specific constraints and deliverables
 - **Judging Criteria** — what judges will score on
+
+Features drag-and-drop multi-image upload with progress tracking and a stop button for long batches.
 
 ### 2. Generate — Requirements to Ideas
 
@@ -39,6 +41,23 @@ Select any idea and run it through an AI judge. GLM-5.1 returns:
 - **2 Actionable Improvements** — concrete next steps
 - **Improved Idea** — a tighter rewrite of the original concept
 
+### 4. Prompt — Idea to Vibe-Code Prompt
+
+Turn any idea into a comprehensive, ready-to-paste prompt for your preferred AI coding tool (Cursor, Windsurf, Bolt, Lovable, v0, Claude, ChatGPT, etc.). The generated prompt includes:
+
+- Project title and tech stack
+- Complete feature list broken into build phases
+- UI/UX layout descriptions
+- API routes and data models
+- Step-by-step build instructions with a "DO NOT STOP" rule
+- Error handling and polish phase
+
+Choose between **GLM-5.1** or **Gemini 3.1 Pro** for prompt generation via a model dropdown.
+
+### + Information Summarizer
+
+A persistent middle panel that displays all structured results — extracted briefs, generated ideas, and judge verdicts — with **Copy** (markdown format) and **Add to Notes** buttons on every card.
+
 ### + Copilot Chat
 
 A floating AI assistant that has full context of your session — extracted requirements, generated ideas, judge results, and your notes. Ask it anything: _"Which idea scored highest?"_, _"Summarize the requirements"_, _"What tech stack fits idea 2?"_
@@ -52,7 +71,7 @@ A persistent, free-form notepad on the right side of the screen. Append any outp
 ## Demo Flow
 
 ```
-Upload slides → Extract requirements → Generate 3 ideas → Judge the best one → Iterate
+Upload slides → Extract requirements → Generate 3 ideas → Judge the best one → Generate vibe-code prompt → Build
 ```
 
 The entire pipeline runs in under 60 seconds with live API keys.
@@ -61,14 +80,14 @@ The entire pipeline runs in under 60 seconds with live API keys.
 
 ## Tech Stack
 
-| Layer       | Technology                                                     |
-| ----------- | -------------------------------------------------------------- |
+| Layer        | Technology                                                     |
+| ------------ | -------------------------------------------------------------- |
 | **Frontend** | Next.js 16 (App Router), React 19, Tailwind CSS 4             |
-| **Backend**  | Next.js API Routes (serverless functions)                     |
+| **Backend**  | Next.js API Routes (serverless functions)                      |
 | **Language** | TypeScript (strict mode)                                       |
 | **Styling**  | Tailwind CSS with dark theme, glassmorphism panels             |
 | **Build**    | Turbopack (dev), Next.js production build                      |
-| **Linting**  | ESLint 9 (flat config) + eslint-config-next                   |
+| **Linting**  | ESLint 9 (flat config) + eslint-config-next                    |
 
 ### LLM Models
 
@@ -78,6 +97,7 @@ The entire pipeline runs in under 60 seconds with live API keys.
 | **Requirement Extraction**    | GLM-5.1 (FP8)                 | Strong structured JSON output from noisy text              |
 | **Idea Generation**           | GLM-5.1 (FP8)                 | Creative yet constrained — 3 distinct ideas per call       |
 | **AI Judging**                | GLM-5.1 (FP8)                 | Consistent scoring with actionable feedback                |
+| **Vibe-Code Prompt**          | GLM-5.1 or Gemini 3.1 Pro     | User-selectable — thorough prompt with build instructions  |
 | **Copilot Chat**              | GLM-5.1 (FP8)                 | Multi-turn conversation with full session context          |
 
 All models are accessed through a unified **OpenAI-compatible chat completions API**, making it trivial to swap providers.
@@ -93,6 +113,7 @@ app/
 │   ├── extract/route.ts       # GLM-5.1 — text → structured brief
 │   ├── generate/route.ts      # GLM-5.1 — brief → 3 MVP ideas
 │   ├── judge/route.ts         # GLM-5.1 — idea → scores + feedback
+│   ├── prompt/route.ts        # GLM-5.1 or Gemini — idea → vibe-code prompt
 │   └── chat/route.ts          # GLM-5.1 — multi-turn assistant
 ├── globals.css                # Tailwind + dark theme
 ├── layout.tsx                 # Root layout with metadata
@@ -104,7 +125,7 @@ components/
 
 lib/
 ├── glm.ts                     # callGLM() + callGLMChat() — API client
-├── prompts.ts                 # Prompt templates for all 3 pipelines
+├── prompts.ts                 # Prompt templates for extract, generate, judge
 ├── json.ts                    # Resilient JSON parser for LLM output
 ├── fallbacks.ts               # Graceful fallback data when API is down
 └── types.ts                   # Shared TypeScript types
@@ -131,14 +152,14 @@ open http://localhost:3000
 
 ## Environment Variables
 
-| Variable         | Purpose                                            |
-| ---------------- | -------------------------------------------------- |
-| `GLM_API_KEY`    | API key for GLM-5.1 (text tasks + chat)            |
-| `GLM_BASE_URL`   | Base URL for GLM endpoint                          |
-| `GLM_MODEL`      | Model identifier (e.g. `zai-org/GLM-5.1-FP8`)     |
-| `GLM_API_KEY2`   | API key for Gemini (multimodal OCR)                |
-| `GLM_BASE_URL2`  | Base URL for Gemini endpoint                       |
-| `GLM_MODEL2`     | Model identifier (e.g. `google/gemini-3.1-pro-preview`) |
+| Variable         | Purpose                                                   |
+| ---------------- | --------------------------------------------------------- |
+| `GLM_API_KEY`    | API key for GLM-5.1 (extraction, ideas, judging, chat)   |
+| `GLM_BASE_URL`   | Base URL for GLM endpoint                                 |
+| `GLM_MODEL`      | Model identifier (e.g. `zai-org/GLM-5.1-FP8`)            |
+| `GLM_API_KEY2`   | API key for Gemini (OCR + optional prompt generation)     |
+| `GLM_BASE_URL2`  | Base URL for Gemini endpoint                              |
+| `GLM_MODEL2`     | Model identifier (e.g. `google/gemini-3.1-pro-preview`)  |
 
 If API keys are missing, the app returns **smart fallback responses** so the full UI flow still works for demos.
 
@@ -147,8 +168,10 @@ If API keys are missing, the app returns **smart fallback responses** so the ful
 ## What Makes This a Winner
 
 - **End-to-end in one page** — no navigation, no signup, no database. Just open and go.
+- **Four-step pipeline** — Extract → Generate → Judge → Prompt covers the full hackathon lifecycle.
 - **Two frontier models** — Gemini for vision, GLM-5.1 for reasoning. Right tool for each job.
-- **Structured outputs** — every AI response is parsed JSON, rendered cleanly, and actionable.
+- **Vibe-code prompt generator** — go from idea to buildable prompt in one click, with model selection.
+- **Information Summarizer** — all AI outputs rendered in a persistent panel with markdown copy.
 - **Context-aware chatbot** — the assistant knows everything you've generated in the session.
 - **Persistent notes** — append any output to a freeform notepad with one click.
 - **Graceful degradation** — works without API keys using built-in fallbacks.

@@ -1,0 +1,6 @@
+Rename Output panel to Information Summarizer, add markdown copy, update README
+
+- Rename "Output" panel to "Information Summarizer"
+- Change "Copy JSON" buttons to "Copy" with markdown-formatted output
+- Update README with Prompt tab docs, Information Summarizer, updated
+  architecture diagram, LLM model table, and demo flow
