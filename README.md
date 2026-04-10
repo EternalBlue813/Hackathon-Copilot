@@ -8,7 +8,7 @@ Hackathon Copilot is a lightweight web app that turns raw hackathon briefs into 
 
 ## The Problem
 
-Every hackathon starts the same way: teams scramble to read dense slide decks, align on what the judges actually want, brainstorm under pressure, and hope their idea holds up during evaluation. Hours are wasted before a single line of code is written.
+Singapore has become one of the most hackathon-dense countries in the world, with dozens of hackathons running every year across universities, enterprises, and government agencies. With so many events, participants often find themselves jumping from one hackathon to the next — and every time, the same bottleneck appears: teams scramble to read dense slide decks, align on what the judges actually want, brainstorm under pressure, and hope their idea holds up during evaluation. Hours are wasted before a single line of code is written.
 
 ## Our Solution
 
@@ -162,20 +162,6 @@ open http://localhost:3000
 | `GLM_MODEL2`     | Model identifier (e.g. `google/gemini-3.1-pro-preview`)  |
 
 If API keys are missing, the app returns **smart fallback responses** so the full UI flow still works for demos.
-
----
-
-## What Makes This a Winner
-
-- **End-to-end in one page** — no navigation, no signup, no database. Just open and go.
-- **Four-step pipeline** — Extract → Generate → Judge → Prompt covers the full hackathon lifecycle.
-- **Two frontier models** — Gemini for vision, GLM-5.1 for reasoning. Right tool for each job.
-- **Vibe-code prompt generator** — go from idea to buildable prompt in one click, with model selection.
-- **Information Summarizer** — all AI outputs rendered in a persistent panel with markdown copy.
-- **Context-aware chatbot** — the assistant knows everything you've generated in the session.
-- **Persistent notes** — append any output to a freeform notepad with one click.
-- **Graceful degradation** — works without API keys using built-in fallbacks.
-- **Production-ready** — TypeScript strict mode, ESLint, clean build, zero warnings.
 
 ---
 
